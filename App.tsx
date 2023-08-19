@@ -33,11 +33,11 @@ function App(): JSX.Element {
     
 
   <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignUp">
+      <Stack.Navigator initialRouteName="Screen1">
         <Stack.Screen name="Screen1" component={Screen1} />
         <Stack.Screen name="Screen2" component={Screen2} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name='SignUp' component={SignUp}/>
+        <Stack.Screen name='Screen3' component={Screen3}/>
+        {/* <Stack.Screen name="Login" component={Login} /> */}
       </Stack.Navigator>
     </NavigationContainer>
     // <NavigationContainer>

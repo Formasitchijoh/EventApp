@@ -44,8 +44,8 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
   const { users } = useAppSelector(state =>state.user)
   const user = {
     id:1,
-    email:'formasit chijoh',
-    password:'1234',
+    email:email,
+    password:password,
   }
 
 
@@ -58,29 +58,24 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
   
  
   const createUser = () => {
-    auth().createUserWithEmailAndPassword(email,password)
-    .then(() =>{
-      console.log('User account created and signed in!');
-    })
-    .catch((error) =>{
-      console.log(error);
-      
-    })
-  // .createUserWithEmailAndPassword(email,password)
-  // .then(() => {
-  //   console.log('User account created & signed in!');
-  // })
-  // .catch(error => {
-  //   if (error.code === 'auth/email-already-in-use') {
-  //     console.log('That email address is already in use!');
-  //   }
+    auth()
+  .createUserWithEmailAndPassword(email,password)
+  .then(() => {
+    console.log('User account created & signed in!');
+  })
+  .catch(error => {
+    if (error.code === 'auth/email-already-in-use') {
+      console.log('That email address is already in use!');
+    }
 
-  //   if (error.code === 'auth/invalid-email') {
-  //     console.log('That email address is invalid!');
-  //   }
+    if (error.code === 'auth/invalid-email') {
+      console.log('That email address is invalid!');
+    }
 
-  //   console.error(error);
-  // });
+    console.error(error);
+  });
+
+ 
   }
         return (
           <View style={[styles.container]}>
@@ -96,7 +91,7 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
         SignIn
       </Text>
       <TextInput
-       placeholder='Enter email' 
+       placeholder='Enster email' 
        value={email}
        onChange={(e:any) => setEmail(e)}
        style={[styles.text]} />
@@ -105,6 +100,7 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
       onChange={(e:any) => setPassword(e) }
        placeholder='Enter password'
         style={[styles.text]} />
+      
       <TouchableOpacity 
       style={{
         width:'90%',
@@ -115,7 +111,7 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
         justifyContent:'center',
         alignItems:'center'
       }} 
-      onPress={ () => createUser()}
+      onPress={ () =>  navigation.navigate('Login')}
       >
         <Text style={{color:'#fff'}}>Create Acount</Text>
       </TouchableOpacity>
