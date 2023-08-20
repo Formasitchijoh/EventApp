@@ -18,40 +18,6 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../Types/Types';
 
 
-type ProfileParamList = { 
-  Profile:{name:string}
-}
-type LoginParamList = {
-  SignIn:{name:string}
-}
-
-type HscreenNavigationProp = StackNavigationProp<ProfileParamList,'Profile'>;
-type HscreenRouteProp = RouteProp<ProfileParamList,'Profile'>;
-
-type LoginNavigationProp = StackNavigationProp<LoginParamList,'SignIn'>;
-type LoginRouteProp = RouteProp<LoginParamList,'SignIn'>
-
-interface HscreenProps {
-  navigation: HscreenNavigationProp;
-  route:HscreenRouteProp;
-}
-interface LoginProp {
-  navigation:LoginNavigationProp,
-  route:LoginRouteProp
-}
-
-const HscreenS: React.FC<HscreenProps> = ({navigation}) =>{
-  return(
-    <Button
-    title='Go to Janes profile'
-    onPress={() =>{
-      navigation.navigate('Profile',{name:'jane'});
-    }}
-    
-    />
-  )
-}
-
 type LoginProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Login'>;
 };
@@ -146,3 +112,40 @@ export const styles = StyleSheet.create({
   },
 });
 
+
+// type ProfileParamList = { 
+//   Profile:{name:string}
+// }
+// type HscreenNavigationProp = StackNavigationProp<ProfileParamList,'Profile'>;
+// type HscreenRouteProp = RouteProp<ProfileParamList,'Profile'>;
+
+
+// interface HscreenProps {
+//   navigation: HscreenNavigationProp;
+//   route:HscreenRouteProp;
+// }
+
+
+
+// const HscreenS: React.FC<HscreenProps> = ({navigation}) =>{
+//   return(
+//     <Button
+//     title='Go to Janes profile'
+//     onPress={() =>{
+//       navigation.navigate('Profile',{name:'jane'});
+//     }}
+    
+//     />
+//   )
+// }
+
+
+// type LoginParamList = {
+//   SignIn:{name:string}
+// }
+// interface LoginProp {
+//   navigation:LoginNavigationProp,
+//   route:LoginRouteProp
+// }
+// type LoginNavigationProp = StackNavigationProp<LoginParamList,'SignIn'>;
+// type LoginRouteProp = RouteProp<LoginParamList,'SignIn'>

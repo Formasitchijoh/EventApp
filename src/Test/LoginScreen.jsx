@@ -3,6 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import FormButton from '../component/FormButton';
 import FormInput from '../component/FormInput';
 import { AuthContext } from '../navigation/AuthProvider';
+import { LoginParamList } from '../Types/Types';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+
+//creating the interface for the type navigation
 
 
 

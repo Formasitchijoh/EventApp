@@ -34,8 +34,6 @@ type SignInProps= {
   navigation: StackNavigationProp<RootStackParamList,'SignUp'>
 }
 export const SignUp:React.FC<SignInProps> = ({navigation}) => { 
-
-  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [test, settest] = useState('')
@@ -111,7 +109,7 @@ export const SignUp:React.FC<SignInProps> = ({navigation}) => {
         justifyContent:'center',
         alignItems:'center'
       }} 
-      onPress={ () =>  navigation.navigate('Login')}
+      onPress={ () =>  navigation.navigate('Home')}
       >
         <Text style={{color:'#fff'}}>Create Acount</Text>
       </TouchableOpacity>

@@ -8,8 +8,15 @@ import {
   SafeAreaView,
   TextInput,
 } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../Types/Types';
 
-const CreateEvent = () => {
+
+type HomeProps = {
+  navigation:StackNavigationProp<RootStackParamList,'Home'>
+} 
+
+const CreateEvent:React.FC<HomeProps> = ({navigation}) => {
   return (
     <View style={[styles.container]}>
       <View
@@ -29,7 +36,8 @@ const CreateEvent = () => {
           <Text style={[styles.textw]}>Scheduler</Text>
         </View>
       </View>
-      <View style={[styles.element]}>
+
+      <TouchableOpacity style={[styles.element]} onPress={() => navigation.navigate('AddEvent')} >
         <View
           style={{
             backgroundColor: '#fff',
@@ -45,7 +53,8 @@ const CreateEvent = () => {
           />
           <Text style={[styles.text]}>Create Event</Text>
         </View>
-      </View>
+      </TouchableOpacity>
+
       <View style={[styles.element]}>
         <View
           style={{

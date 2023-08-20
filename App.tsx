@@ -25,18 +25,24 @@ import { Screen1 } from './src/Screens/Home/home';
 import { Screen2 } from './src/Screens/Participants/participants';
 import { Screen3 } from './src/Screens/Event/event';
 import { SignUp } from './src/Screens/SignUp/SignUp';
-
-
+import { Home } from './src/Screens/Home/home';
+import AddEvent from './src/Screens/AddEvent/AddEvent';
+import { Participants } from './src/Screens/Participants/participants';
 const Stack = createNativeStackNavigator()
 function App(): JSX.Element {
   return (
     
 
   <NavigationContainer>
-      <Stack.Navigator initialRouteName="Screen1">
-        <Stack.Screen name="Screen1" component={Screen1} />
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name='Login' component={Login}/>
+        <Stack.Screen name='SignUp' component={SignUp}/>
+        <Stack.Screen name='Home' component={Home}/>
+        <Stack.Screen name='AddEvent' component={AddEvent}/>
+        <Stack.Screen name='Participants' component={Participants}/>
+        {/* <Stack.Screen name="Screen1" component={Screen1} />
         <Stack.Screen name="Screen2" component={Screen2} />
-        <Stack.Screen name='Screen3' component={Screen3}/>
+        <Stack.Screen name='Screen3' component={Screen3}/> */}
         {/* <Stack.Screen name="Login" component={Login} /> */}
       </Stack.Navigator>
     </NavigationContainer>
