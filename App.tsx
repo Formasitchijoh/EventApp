@@ -21,44 +21,53 @@ import LoginScreen from './src/Test/LoginScreen';
 import { NavigationProp } from '@react-navigation/native';
 import gestureHandlerRootHOC, { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Screen1 } from './src/Screens/Home/home';
-import { Screen2 } from './src/Screens/Participants/participants';
-import { Screen3 } from './src/Screens/Event/event';
 import { SignUp } from './src/Screens/SignUp/SignUp';
 import { Home } from './src/Screens/Home/home';
 import AddEvent from './src/Screens/AddEvent/AddEvent';
 import { Participants } from './src/Screens/Participants/participants';
-const Stack = createNativeStackNavigator()
-function App(): JSX.Element {
-  return (
-    
+import {PassingParametersToRoutes_HomeScreen,PassingParametersToRoutes_DetailScreen,PassingParametersToRoutes_SetParams} from './src/React_Navigation/PassingParametersToRoutes';
+import { Home_,Profile,Settings,Feed,Messages } from './src/React_Navigation/PassingParametersToRoutes';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+
+const Tab = createBottomTabNavigator()
+const Stack = createNativeStackNavigator()
+
+function Homep() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen name="Messages" component={Messages} />
+    </Tab.Navigator>
+  );
+}
+function App(): JSX.Element { 
+  return (
   <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle:{
+        backgroundColor:'#f4511e',
+      },
+      headerTintColor:"#fff",
+     headerTitleStyle:{
+      fontWeight:'bold'
+     },
+    }}
+    initialRouteName="SignUp">
         <Stack.Screen name='Login' component={Login}/>
         <Stack.Screen name='SignUp' component={SignUp}/>
         <Stack.Screen name='Home' component={Home}/>
         <Stack.Screen name='AddEvent' component={AddEvent}/>
         <Stack.Screen name='Participants' component={Participants}/>
-        {/* <Stack.Screen name="Screen1" component={Screen1} />
-        <Stack.Screen name="Screen2" component={Screen2} />
-        <Stack.Screen name='Screen3' component={Screen3}/> */}
-        {/* <Stack.Screen name="Login" component={Login} /> */}
       </Stack.Navigator>
     </NavigationContainer>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     {/* <Stack.Screen name='Home' component={LoginScreen}/> */}
-    //     <Stack.Screen
-    //     name='Home'
-    //     component={Hscreen}
-    //     options={{title:'Welcome'}}
-    //     />
-    //     <Stack.Screen name='Profile' component={Profile}/>
-    //   </Stack.Navigator>
-    
-    // </NavigationContainer>
+   
     );
 }
 
 export default App;
+{/* <Stack.Screen name='Home' initialParams={{itemId:23}}  options={{title:'My home'}} component={Profile}/> 
+     <Stack.Screen name='Profile'  component={ Profile} />
+       <Stack.Screen name='Settings'  component={Settings}/> */}

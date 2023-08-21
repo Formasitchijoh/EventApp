@@ -1,16 +1,30 @@
-import { Button, View,StyleSheet } from "react-native";
+import { Button, View,StyleSheet,ScrollView } from "react-native";
 import { RootStackParamList } from "../../Types/Types";
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SearchInput } from "../../component/SearchInput";
+import { SearchInput,UserCmponent } from "../../component/SearchInput";
 
 type participantsProps = {
   navigation:StackNavigationProp<RootStackParamList,'Participants'>
 }
 export const Participants:React.FC<participantsProps> =({navigation}) =>{
   return (
-    <View style={[styles.container]}>
+    <ScrollView style={{flex:1,margin:'auto'}}>
       <SearchInput/>
-    </View>
+      <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+       <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+       <UserCmponent/>
+      <UserCmponent/>
+      <UserCmponent/>
+    </ScrollView>
+    
+  
   )
 }
 
@@ -21,7 +35,10 @@ export const styles = StyleSheet.create({
     alignItems:'center',
     margin:'auto',
     backgroundColor:'#fff'
-  }
+  },
+  scrollView: {
+    marginHorizontal: 'auto',
+  },
 })
 
 type Screen2Props = {
