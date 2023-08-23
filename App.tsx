@@ -28,6 +28,7 @@ import { Participants } from './src/Screens/Participants/participants';
 import {PassingParametersToRoutes_HomeScreen,PassingParametersToRoutes_DetailScreen,PassingParametersToRoutes_SetParams} from './src/React_Navigation/PassingParametersToRoutes';
 import { Home_,Profile,Settings,Feed,Messages } from './src/React_Navigation/PassingParametersToRoutes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const Tab = createBottomTabNavigator()
@@ -40,6 +41,50 @@ function Homep() {
       <Tab.Screen name="Messages" component={Messages} />
     </Tab.Navigator>
   );
+} 
+
+const AllScreens = () =>{
+  return (
+    <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen name='Home' options={{headerShown:false}} component={Home}/>
+        <Stack.Screen name='AddEvent' options={{headerShown:false}} component={AddEvent}/>
+        <Stack.Screen name='Participants' options={{headerShown:false}} component={Participants}/>
+      </Stack.Navigator>
+
+  )
+}
+
+const Tabs = () =>{
+  
+  return(
+    <Tab.Navigator
+  screenOptions={{
+    headerStyle:{
+      backgroundColor:'#fff',
+    },
+    headerTintColor:"#fff",
+   headerTitleStyle:{
+    fontWeight:'bold'
+   },
+  }}
+  initialRouteName="FirstScreen">
+    <Tab.Screen name='FirstScreen' options={{headerShown:false}} component={AllScreens}  />
+
+    <Tab.Screen
+        name='SecondScreen'
+        component={AddEvent}
+        options={{
+          tabBarLabel: 'home',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name='home' color={color} size={26} />
+          ),
+        }}
+      />
+    {/* <Tab.Screen name='SecondScreen' options={{headerShown:false}} component={AddEvent}/> */}
+    <Tab.Screen name='ThirdScreen'  options={{headerShown:false}} component={Participants}/>
+    </Tab.Navigator>
+  )
+
 }
 function App(): JSX.Element { 
   return (
@@ -48,19 +93,19 @@ function App(): JSX.Element {
     <Stack.Navigator
     screenOptions={{
       headerStyle:{
-        backgroundColor:'#f4511e',
+        backgroundColor:'#fff',
       },
       headerTintColor:"#fff",
      headerTitleStyle:{
       fontWeight:'bold'
      },
+     headerShown:false
+    
     }}
     initialRouteName="SignUp">
-        <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='SignUp' component={SignUp}/>
-        <Stack.Screen name='Home' component={Home}/>
-        <Stack.Screen name='AddEvent' component={AddEvent}/>
-        <Stack.Screen name='Participants' component={Participants}/>
+     <Stack.Screen name='Login' options={{headerShown:false}} component={Login}/>
+        <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/>
+          <Stack.Screen name='TabScreens' options={{headerShown:false}} component={Tabs}/>
       </Stack.Navigator>
     </NavigationContainer>
    

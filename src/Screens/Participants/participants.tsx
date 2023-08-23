@@ -1,28 +1,18 @@
 import { Button, View,StyleSheet,ScrollView } from "react-native";
 import { RootStackParamList } from "../../Types/Types";
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SearchInput,UserCmponent } from "../../component/SearchInput";
+import { SearchInput,UserCmponent, styles2 } from "../../component/SearchInput";
 
 type participantsProps = {
   navigation:StackNavigationProp<RootStackParamList,'Participants'>
 }
 export const Participants:React.FC<participantsProps> =({navigation}) =>{
   return (
-    <ScrollView style={{flex:1,margin:'auto'}}>
+    <View  style={[styles.container]}>
       <SearchInput/>
       <UserCmponent/>
       <UserCmponent/>
-      <UserCmponent/>
-       <UserCmponent/>
-      <UserCmponent/>
-      <UserCmponent/>
-      <UserCmponent/>
-      <UserCmponent/>
-      <UserCmponent/>
-       <UserCmponent/>
-      <UserCmponent/>
-      <UserCmponent/>
-    </ScrollView>
+    </View>
     
   
   )

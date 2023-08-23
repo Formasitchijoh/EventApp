@@ -112,7 +112,7 @@ export const Feed = ({navigation}) =>{
         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
         <Button
         title='Profile'
-        onPress={()=>navigation.navigate("Profile")}
+        onPress={()=>navigation.navigate("Login")}
         />
     </View>
     )
@@ -123,7 +123,7 @@ export const Messages = () =>{
         <Text>Messages</Text>
         <Button
         title='Settings'
-        onPress={()=>navigation.navigate("Settings")}
+        onPress={()=>navigation.navigate("Home")}
         />
     </View>
     )

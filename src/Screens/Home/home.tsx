@@ -1,17 +1,29 @@
-import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { RootStackParamList } from "../../Types/Types";
-import { StackNavigationProp } from '@react-navigation/stack';
-import CreateEvent from "../../component/createEvent";
-import { RouteProp } from "@react-navigation/native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+  ScrollView,
+  StatusBar
+} from 'react-native';
+import {RootStackParamList} from '../../Types/Types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import CreateEvent from '../../component/createEvent';
+import {DarkTheme, RouteProp} from '@react-navigation/native';
 
 type HomeProps = {
-  navigation:StackNavigationProp<RootStackParamList,'Home'>
+  navigation: StackNavigationProp<RootStackParamList, 'Home'>;
+};
 
-}
-
-export const Home:React.FC<HomeProps> =({navigation}) =>{ 
+export const Home: React.FC<HomeProps> = ({navigation}) => {
   return (
-    <View style={[styles.container]}>
+    <>
+    <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+   <SafeAreaView>
+   <View style={[styles.container]}>
       <View
         style={{
           width: '70%',
@@ -30,7 +42,9 @@ export const Home:React.FC<HomeProps> =({navigation}) =>{
         </View>
       </View>
 
-      <TouchableOpacity style={[styles.element]} onPress={() => navigation.navigate('AddEvent')} >
+      <TouchableOpacity
+        style={[styles.element]}
+        onPress={() => navigation.navigate('AddEvent')}>
         <View
           style={{
             backgroundColor: '#fff',
@@ -67,9 +81,11 @@ export const Home:React.FC<HomeProps> =({navigation}) =>{
         </View>
       </View>
     </View>
-  )
-
-}
+   </SafeAreaView>
+    </>
+    
+  );
+};
 
 export const styles = StyleSheet.create({
   container: {
@@ -91,7 +107,7 @@ export const styles = StyleSheet.create({
     marginBottom: '10%',
     shadowRadius: 5,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height:2},
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.8,
     elevation: 5,
   },
@@ -117,17 +133,16 @@ export const styles = StyleSheet.create({
   },
 });
 type Screen1Props = {
-    navigation: StackNavigationProp<RootStackParamList, 'Screen1'>;
-  };
+  navigation: StackNavigationProp<RootStackParamList, 'Screen1'>;
+};
 
-
-  export const Screen1: React.FC<Screen1Props> = ({ navigation }) => {
-    return (
-      <View>
-        <Button
-          title="Go to Screen 2"
-          onPress={() => navigation.navigate('Screen2')}
-        />
-      </View>
-    );
-  };
+export const Screen1: React.FC<Screen1Props> = ({navigation}) => {
+  return (
+    <View>
+      <Button
+        title="Go to Screen 2"
+        onPress={() => navigation.navigate('Screen2')}
+      />
+    </View>
+  );
+};
