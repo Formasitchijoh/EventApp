@@ -17,6 +17,7 @@ import { Home } from './src/Screens/Home/home';
 import AddEvent from './src/Screens/AddEvent/AddEvent';
 import { Participants } from './src/Screens/Participants/participants';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ImageUpload } from './src/component/ImageUpload';
 
 // import { ImageUpload } from './src/component/ImageUpload';
 const Tab = createBottomTabNavigator()
@@ -83,7 +84,7 @@ function App(): JSX.Element {
     
     }}
     initialRouteName="Login">
-     <Stack.Screen name='Login' options={{headerShown:false}} component={Login}/>
+     <Stack.Screen name='Login' options={{headerShown:false}} component={ImageUpload}/>
         <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/>
           <Stack.Screen name='TabScreens' options={{headerShown:false}} component={Tabs}/>
       </Stack.Navigator>
