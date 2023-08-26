@@ -1,5 +1,9 @@
 import React from 'react';
-import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {Button, Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import { Formik } from 'formik';
+import { styles2 } from './SearchInput';
+import * as yup from 'yup'
+import { Event } from '../Models/userType';
 
 type placeholder = {
   name: string;
@@ -27,6 +31,7 @@ export const TitleInput: React.FC<placeholder> = ({name}) => {
            placeholder={name}
            placeholderTextColor="#666"
            style={[styles.text]}
+          
            ></TextInput>
        </View>
     );
@@ -70,6 +75,87 @@ export const DateInput = () => {
     </View>
   );
 };
+
+
+const loginValSchema = yup.object().shape({
+  email: yup.string()
+          .email('please enter valid email')
+          .required('Email Address is required'),
+  password : yup.string()
+              .min(8,({min}) =>  `Password must be ${min} charactes or more`)
+              .required('password required'),
+
+})
+export const FormikComponent = () =>{
+  return(
+    <View>
+      <Text>Login Screen</Text>
+
+      <Formik 
+      validationSchema={loginValSchema}
+      initialValues={{email:'', password:''}}
+      onSubmit={(values) => console.log(values)
+      
+      }
+      >
+        {({handleChange, handleBlur, handleSubmit, values,errors, touched, isValid}) =>(
+          <>
+          <TextInput
+          placeholder='Enter your email'
+          style={styles.text}
+          onChangeText={handleChange('email')}
+          onBlur={handleBlur('email')}
+          value={values.email}
+          >
+          </TextInput>
+          {( errors.email && touched.email) && <Text style={{fontSize:10, color:'red'}}>{errors.email}</Text>}
+          <TextInput
+          placeholder='Enter your password'
+          style={styles.text}
+          onChangeText={handleChange('password')}
+          onBlur={handleBlur('password')}
+          value={values.password}
+          >
+          </TextInput>
+          { (errors.password && touched.password) && <Text style={{fontSize:10, color:'red'}}>{errors.password}</Text>}
+          <Button onPress={() => handleSubmit()} title='LOGIN' disabled={!isValid}/>
+          { values && <Text>{values.email} and the passwd is {values.password}</Text>}
+          </>
+        )}
+      </Formik>
+    </View>
+  )
+}
+
+export const CustomInput = ( props:any) =>{
+
+  const {
+    field:{name, onBlur, onChange, value},
+    form :{ errors, touched, setFieldTouched},
+    ...inputProps
+  } = props
+
+  const hasError = errors[name] && touched[name]
+  return(
+    <>
+    <TextInput 
+    style={[styles.text,
+    props.multiline && { height: props.numberOfLines * 40 },
+    hasError && styles.errorInput
+    ]}
+    value={value}
+    onChangeText={(text) => onChange(name)(text)}
+    onBlur={() =>{
+      setFieldTouched(name)
+      onBlur(name)
+    }}
+    {...inputProps}
+    />
+    { hasError && <Text style={{fontSize:10, color:'red'}}>{errors[name]}</Text>}
+    </>
+  )
+}
+
 export const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -103,6 +189,9 @@ export const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center'
+  },
+  errorInput: {
+    borderColor: 'red',
   }
 });
 export default Form_Input;

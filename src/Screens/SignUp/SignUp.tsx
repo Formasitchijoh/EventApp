@@ -33,6 +33,10 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
     password: '',
   });
 
+  type Users = {
+    email:string,
+    password:string
+  }
   const {users} = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
@@ -43,17 +47,17 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
     }));
   };
 
-  const createUser = () => {
+  const createUser = () => { 
     auth()
-      .createUserWithEmailAndPassword(userDetails.email, userDetails.password)
+    .signInWithEmailAndPassword(userDetails.email, userDetails.password)
       .then(() => {
-        const user = {
-          id: uuidv4(),
-          email: userDetails.email,
-          password: userDetails.password,
-        };
-        dispatch(setUserData(user));
-        console.log('User account created & signed in!');
+        // const user = {
+        //   id: uuidv4(),
+        //   email:userDetails.email,
+        //   password:userDetails.password,
+        // };
+        // dispatch(setUserData(user));
+        console.log('successfully signed in!');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -66,6 +70,8 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
 
         console.error(error);
       });
+
+      navigation.navigate('TabScreens')
   };
 
   // useEffect(() => {
@@ -94,13 +100,12 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
           fontSize: 30,
           fontWeight: '900',
           marginBottom: 10,
-        }}>
-        SignIn
-      </Text>
+        }}> SignIn</Text>
       <Formik
         validationSchema={loginValidationSchema}
-        initialValues={{emails: '', passwd: ''}} 
-        onSubmit={createUser}
+        initialValues={{email: '', password: ''}} 
+        onSubmit={(values) =>setUserDetails(values)
+        }
         >
         {({
           handleChange,
@@ -114,26 +119,31 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
           <>
             <TextInput
               placeholder="Enter email"
-              value={values.emails}
-              onChangeText={handleChange('emails')}
-              onBlur={handleBlur('emails')}
+              value={userDetails.email}
+              onChangeText={(value) => onInputChange(value, 'email')}
+              onBlur={handleBlur('email')}
               keyboardType="email-address"
               style={[styles.text]}
             />
-            {errors.emails && touched.emails && (
-              <Text style={{fontSize: 10, color: 'red'}}>{errors.emails}</Text>
+            {errors.email && touched.email && (
+              <Text style={{fontSize: 10, color: 'red'}}>{errors.email}</Text>
             )}
             <TextInput
-              value={values.passwd}
-              onChangeText={handleChange('passwd')}
-              onBlur={handleBlur('passwd')}
+              value={userDetails.password}
+              onChangeText={value => onInputChange(value,'password')}
+              onBlur={handleBlur('password')}
               placeholder="Enter password"
               style={[styles.text]}
             />
-            {errors.passwd && touched.passwd && (
-              <Text style={{fontSize: 10, color: 'red'}}>{errors.passwd}</Text>
+            {errors.password && touched.password && (
+              <Text style={{fontSize: 10, color: 'red'}}>{errors.password}</Text>
             )}
-            <TouchableOpacity
+                  
+          </>
+        )}
+      </Formik>
+    
+      <TouchableOpacity
               style={{
                 width: '90%',
                 height: 50,
@@ -143,9 +153,7 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              disabled={!isValid}
-              // onPress={createUser}
-              >
+              onPress={() => createUser()}>
               <Text style={{color: '#fff'}}>Create Acount</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -158,13 +166,11 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('TabScreens')}>
+              onPress={() =>navigation.navigate('TabScreens') }>
               <Text style={{color: '#fff'}}>Next</Text>
-            </TouchableOpacity>
-           
-          </>
-        )}
-      </Formik>
+            </TouchableOpacity> 
+      { userDetails && <Text>{userDetails.email} and {userDetails.password}</Text>}
+
     </View>
   );
 };

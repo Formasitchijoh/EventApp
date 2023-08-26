@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
 import userSlices from './slices/userSlices';
-
+import EventSlice from './slices/EventSlice';
 export const store = configureStore({
   reducer: {
     user: userSlices,
+    event:EventSlice
   },
 });
 

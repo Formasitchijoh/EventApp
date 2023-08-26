@@ -29,19 +29,14 @@ import {PassingParametersToRoutes_HomeScreen,PassingParametersToRoutes_DetailScr
 import { Home_,Profile,Settings,Feed,Messages } from './src/React_Navigation/PassingParametersToRoutes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-
+import { FormikComponent } from './src/component/Form_Input';
+import SignUpScreen from './src/Test/SignupScreen';
+import {Blog} from './src/component/BlogForm';
+import { Avatar } from './src/component/ImageGallery/Avatar';
+// import { ImageUpload } from './src/component/ImageUpload';
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
-function Homep() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Feed" component={Feed} />
-      <Tab.Screen name="Messages" component={Messages} />
-    </Tab.Navigator>
-  );
-} 
 
 const AllScreens = () =>{
   return (
@@ -70,7 +65,7 @@ const Tabs = () =>{
   initialRouteName="FirstScreen">
     <Tab.Screen name='FirstScreen' options={{headerShown:false}} component={AllScreens}  />
 
-    <Tab.Screen
+    {/* <Tab.Screen
         name='SecondScreen'
         component={AddEvent}
         options={{
@@ -79,8 +74,8 @@ const Tabs = () =>{
             <MaterialCommunityIcons name='home' color={color} size={26} />
           ),
         }}
-      />
-    {/* <Tab.Screen name='SecondScreen' options={{headerShown:false}} component={AddEvent}/> */}
+      /> */}
+    <Tab.Screen name='SecondScreen' options={{headerShown:false}} component={AddEvent}/>
     <Tab.Screen name='ThirdScreen'  options={{headerShown:false}} component={Participants}/>
     </Tab.Navigator>
   )
@@ -102,8 +97,8 @@ function App(): JSX.Element {
      headerShown:false
     
     }}
-    initialRouteName="SignUp">
-     <Stack.Screen name='Login' options={{headerShown:false}} component={Login}/>
+    initialRouteName="Login">
+     <Stack.Screen name='Login' options={{headerShown:false}} component={AddEvent}/>
         <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/>
           <Stack.Screen name='TabScreens' options={{headerShown:false}} component={Tabs}/>
       </Stack.Navigator>

@@ -10,7 +10,6 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
-
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -27,27 +26,8 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new com.swmansion.rnscreens.RNScreensPackage());
         packages.add(new com.th3rdwave.safeareacontext.SafeAreaContextPackage());
         packages.add(new com.swmansion.reanimated.ReanimatedPackage());
-        // packages.add(new com.swmansion.reanimated.RNGestureHandlerPackage()); // Add this line
-         // Add this line
-        //  packages.add(new ReactNativeFirebaseAuthPackage()); // Add this line
-        // packages.add(new RNSScreenStackHeaderConfig());
         return packages;
       } 
-    //    @Override
-    // protected List<ReactPackage> getPackages() {
-    //   return Arrays.<ReactPackage>asList(
-    //       new MainReactPackage(),
-    //         new AsyncStoragePackage(),
-    //         new RNFirebasePackage(),
-    //         new RNFirebaseFirestorePackage(),
-    //         new RNFirebaseLinksPackage(),
-    //         new RNFirebaseAuthPackage(),
-    //         new ReanimatedPackage(),
-    //         new RNGestureHandlerPackage(),
-    //         new RNScreensPackage(),
-    //         new SafeAreaContextPackage()
-    //   );
-    // }
 
         @Override
         protected String getJSMainModuleName() {

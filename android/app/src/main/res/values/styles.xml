@@ -1,3 +1,5 @@
+
+
 <resources>
 
     <!-- Base application theme. -->
@@ -5,5 +7,12 @@
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
     </style>
+     <style name="DatePickerTheme" parent="DatePickerBaseTheme">
+    <item name="android:colorControlNormal">#dd00ff</item>
+      <item name="colorAccent">#dd00ff</item>
+          <item name="android:textSize">25sp</item>
+
+</style>
+   
 
 </resources>

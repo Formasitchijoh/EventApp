@@ -22,8 +22,8 @@ export const Home: React.FC<HomeProps> = ({navigation}) => {
   return (
     <>
     <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-   <SafeAreaView>
-   <View style={[styles.container]}>
+   <SafeAreaView style={[styles.container]}>
+   {/* <View > */}
       <View
         style={{
           width: '70%',
@@ -80,7 +80,7 @@ export const Home: React.FC<HomeProps> = ({navigation}) => {
           <Text style={[styles.text]}>Join an event</Text>
         </View>
       </View>
-    </View>
+    {/* </View> */}
    </SafeAreaView>
     </>
     
