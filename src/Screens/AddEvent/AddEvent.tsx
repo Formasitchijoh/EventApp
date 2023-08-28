@@ -15,24 +15,16 @@ import {DateInput, TitleInput} from '../../component/Form_Input';
 import {Event} from '../../Models/userType';
 import {v4 as uuid} from 'uuid';
 import DatePicker from 'react-native-date-picker';
-import moment from 'moment';
+import firestore from '@react-native-firebase/firestore'
+
 
 type AddEventProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddEvent'>;
 };
 
 export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
-  // Get the current date
-  const currentDate = moment().toDate();
+ 
 
-  // Format a date
-  const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-
-  // Add or subtract time from a date
-  const modifiedDate = moment(currentDate).add(1, 'days').toDate();
-
-  // Compare two dates
-  const isAfter = moment(currentDate).isAfter(modifiedDate);
 
   const [state, setState] = useState<Event>({
     id: Math.ceil(Math.random() * 20),
@@ -55,9 +47,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
     end_time: false,
   });
 
-  const handleDateChange = (newDate: any) => {
-    setDate(newDate);
-  };
+
   const handleInputchange = (value: string, name: string) => {
     setState(prev => ({
       ...prev,
@@ -65,13 +55,24 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
     }));
   };
 
-  // const handleDateTimeChange = (e:Date) =>{
-  //   setState(prev => ({
-  //     ...prev,
-  //     [name:]
-  //   }))
+  const onSubmit = () =>{ 
+    console.log(JSON.stringify(state));
+    
+    firestore()
+    .collection('Events')
+    .add({
+      ...state
+    }).then(() =>{
+      console.log('data uploaded successfully');
+      
+    }).catch(err =>{
+      console.log(err);
+      
+    })
 
-  // }
+  }
+
+ 
   return (
     <View style={[styles.container]}>
       <Text style={[styles.text]}>Schedule a Task </Text>
@@ -97,7 +98,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="start date"
             placeholderTextColor="#666"
-            onChangeText={value => handleInputchange(value, 'start_date')}
+            value={state.start_date.toISOString().toString().slice(0,10).replaceAll('-','/')}
             style={{width: '90%'}}></TextInput>
           <View
             style={{
@@ -148,7 +149,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="end date"
             placeholderTextColor="#666"
-            onChangeText={value => handleInputchange(value, 'end_date')}
+            value={state.end_date.toISOString().toString().slice(0,10).replaceAll('-','/')}
             style={{width: '90%'}}></TextInput>
           <View
             style={{
@@ -200,7 +201,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="start date"
             placeholderTextColor="#666"
-            onChangeText={value => handleInputchange(value, 'start_time')}
+            value={state.start_time.toISOString().toString().slice(11,19)}
             style={{width: '85%'}}></TextInput>
           <View
             style={{
@@ -250,7 +251,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="start date"
             placeholderTextColor="#666"
-            onChangeText={value => handleInputchange(value, 'end_time')}
+            value={state.end_time.toISOString().toString().slice(11,19)}
             style={{width: '85%'}}></TextInput>
           <View
             style={{
@@ -297,21 +298,19 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
       />
 
       </View>
-
       <View style={[stylesn.container]}>
         <TextInput
           placeholder="Add participants"
           placeholderTextColor="#666"
           style={[stylesn.text]}></TextInput>
-      </View>
+      </View> 
+     
       <TouchableOpacity
         style={[styles.button]}
-        onPress={() =>
-          console.log(JSON.stringify(state))
-          // navigation.navigate('Participants')
-        }>
+        onPress={onSubmit}>
         <Text style={[styles.textbtn]}>submit</Text>
       </TouchableOpacity>
+         
 
       {date && <Text>{JSON.stringify(date)}</Text>}
     </View>

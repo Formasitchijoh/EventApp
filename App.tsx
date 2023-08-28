@@ -18,7 +18,7 @@ import AddEvent from './src/Screens/AddEvent/AddEvent';
 import { Participants } from './src/Screens/Participants/participants';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ImageUpload } from './src/component/ImageUpload';
-
+import { AddParticipants } from './src/Screens/AddParticipants';
 // import { ImageUpload } from './src/component/ImageUpload';
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -50,17 +50,6 @@ const Tabs = () =>{
   }}
   initialRouteName="FirstScreen">
     <Tab.Screen name='FirstScreen' options={{headerShown:false}} component={AllScreens}  />
-
-    {/* <Tab.Screen
-        name='SecondScreen'
-        component={AddEvent}
-        options={{
-          tabBarLabel: 'home',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='home' color={color} size={26} />
-          ),
-        }}
-      /> */}
     <Tab.Screen name='SecondScreen' options={{headerShown:false}} component={AddEvent}/>
     <Tab.Screen name='ThirdScreen'  options={{headerShown:false}} component={Participants}/>
     </Tab.Navigator>
@@ -84,7 +73,7 @@ function App(): JSX.Element {
     
     }}
     initialRouteName="Login">
-     <Stack.Screen name='Login' options={{headerShown:false}} component={ImageUpload}/>
+     <Stack.Screen name='Login' options={{headerShown:false}} component={Participants}/>
         <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/>
           <Stack.Screen name='TabScreens' options={{headerShown:false}} component={Tabs}/>
       </Stack.Navigator>
@@ -94,6 +83,3 @@ function App(): JSX.Element {
 }
 
 export default App;
-{/* <Stack.Screen name='Home' initialParams={{itemId:23}}  options={{title:'My home'}} component={Profile}/> 
-     <Stack.Screen name='Profile'  component={ Profile} />
-       <Stack.Screen name='Settings'  component={Settings}/> */}

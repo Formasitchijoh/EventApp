@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import {View, StyleSheet, Text, TextInput, Image} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import CheckBox from 'react-native-check-box';
 export const SearchInput = () => {
   return (
@@ -24,14 +31,19 @@ export const SearchInput = () => {
   );
 };
 
-export const UserCmponent = () => { 
-
-  const [state, setState] = useState(false)
+export const UserCmponent = () => {
+  const [state, setState] = useState(false);
   return (
     <View style={styles2.viewAll}>
-      <View style={{width:'15%', height:'100%', justifyContent:'center',alignItems:'flex-end'}}>
+      <View
+        style={{
+          width: '15%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+        }}>
         <CheckBox
-          style={{flex: 1, marginTop:15, marginRight:10}}
+          style={{flex: 1, marginTop: 15, marginRight: 10}}
           onClick={() => {
             setState(!state);
           }}
@@ -51,29 +63,45 @@ export const UserCmponent = () => {
     </View>
   );
 };
+
+type ButtonProps = {
+  title: string;
+};
+
+export const CustomButton: React.FC<ButtonProps> = ({title}) => {
+  return (
+    <View style={[styles2.buttonContainer]}>
+      <TouchableOpacity style={[styles2.button]}>
+        <Text style={[styles2.buttonText]}>{title}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 export const styles2 = StyleSheet.create({
   container: {
     width: '100%',
     height: '20%',
   },
   viewAll: {
-    width: '90%',
-    height: '15%',
+    width: '95%',
+    height: '20%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 2,
     borderWidth: 0.1,
-    marginBottom: 15,
-   shadowRadius:5,
-   shadowColor:"#000",
-   shadowOpacity:0.1,
-   elevation:3,
-   shadowOffset:{width:0,height:2}
+    marginBottom: 10,
+    shadowRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    elevation: 3,
+    shadowOffset: {width: 0, height: 2},
+    marginHorizontal: 10,
   },
   viewImage: {
-    width: '20%',
+    width: '22%',
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -103,6 +131,39 @@ export const styles2 = StyleSheet.create({
     fontWeight: '800',
     textShadowColor: '#fafa',
   },
+  buttonContainer:{
+    width:'100%',
+    height:'10%',
+   display:'flex',
+   flexDirection:"row",
+   justifyContent:'flex-end',
+   alignItems:'center',
+  },
+  button:{
+    width:'30%',
+    height:'60%',
+    shadowColor:'#000',
+    shadowOpacity:50,
+    elevation:10,
+    shadowRadius:10,
+    backgroundColor:'#180923',
+    justifyContent:'center',
+    marginRight:10,
+    borderRadius:10,
+    alignItems:'flex-end',
+    paddingVertical:10,
+    paddingHorizontal:5
+    
+
+  },
+  buttonText:{
+    fontFamily:'sans serif',
+    fontSize:13,
+    fontStyle:'normal',
+    fontWeight:'bold',
+  alignSelf:"center",
+  color:'white'
+  }
 });
 
 export const styles = StyleSheet.create({
@@ -111,6 +172,8 @@ export const styles = StyleSheet.create({
     height: 'auto',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom:10,
+    marginTop:'20%'
   },
   text: {
     width: '90%',
