@@ -2,6 +2,7 @@ import { Button, View } from "react-native";
 import { RootStackParamList } from "../../Types/Types";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+
 type Screen3Props = {
     navigation: StackNavigationProp<RootStackParamList, 'Screen3'>;
   };

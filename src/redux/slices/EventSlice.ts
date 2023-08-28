@@ -17,6 +17,9 @@ const EventSlice = createSlice({
     reducers:{
        addEvent:(state, action:PayloadAction<Event>) =>{
         [...state.events,action.payload]
+    },
+    getAllEvent:(state, action:PayloadAction<Event>) =>{
+            state.events.push(action.payload)
     }
 
     }
