@@ -7,11 +7,15 @@ export const events = StyleSheet.create({
          alignItems: 'center',
          height:'100%'
     },
+    scrollView: {
+        width: '100%',
+        height: '100%',
+      },
     container:{
        display:'flex',
        flexDirection:'row',
        width:"95%",
-       height:'15%',
+        height:100,
         justifyContent:'center',
         alignContent:"center",
         borderWidth:1,
@@ -93,11 +97,7 @@ export const events = StyleSheet.create({
         height:'auto',
         marginRight:10
     },
-    scrollView: {
-        width: '100%',
-        height:'100%'
-       
-      },
+  
     
     
 })

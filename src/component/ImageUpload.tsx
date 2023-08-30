@@ -16,7 +16,7 @@ import {object} from 'yup';
 import {ScrollView} from 'react-native';
 import { setUserData } from '../redux/slices/userSlices';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-// import image from '../resources/img.jpg'
+
 export const ImageUpload = () => {
   const [image, setImage] = React.useState('');
   const [allAvatars, setAllAvatars] = useState<any[]>([]);

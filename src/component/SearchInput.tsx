@@ -12,6 +12,8 @@ import CheckBox from 'react-native-check-box';
 import { User } from '../Models/userType';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { getSelectedUsers } from '../redux/slices/userSlices';
+import Entypo  from 'react-native-vector-icons/Entypo'
+
 export const SearchInput = () => {
   return (
     <View style={styles.container}>
@@ -40,12 +42,17 @@ type UserProp = {
   name:string,
   email:string,
   Selected: boolean,
-  }
+  onClickUpdate: (id: string) => void,
+  
+}
 
-export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Selected }) => {
+export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Selected,onClickUpdate }) => {
   const [isSelected, setIsSelected] = useState(Selected)
+ 
   const users = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
+
+ const ids = id as unknown as string
 
   const handleIsSelected = () => { 
     const selectedUser = {id, photoUrl, name, email, Selected}
@@ -76,22 +83,40 @@ export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Se
         <Text style={styles2.text}>{name}</Text>
         <Text>{email}</Text>
       </View>
+      <TouchableOpacity style={{width:'5%', justifyContent:'flex-start',alignItems:'flex-start',height:'90%'}} onPress={() =>onClickUpdate(ids)}>
+        <Entypo
+        name='dots-three-vertical'
+        size={25}
+        color={'#000'}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
 
 type ButtonProps = {
   title: string;
-  onAddUser:() =>void
+  onAddUser?:() =>void,
+  width:number
 };
 
-export const CustomButton: React.FC<ButtonProps> = ({title,onAddUser}) => {
-  return (
-    <View style={[!(title == 'Submit')? styles2.buttonContainer: styles2.buttonContainer1]}>
-      <TouchableOpacity style={[styles2.button]} onPress={onAddUser}>
-        <Text style={[styles2.buttonText]}>{title}</Text>
+export const CustomButton: React.FC<ButtonProps> = ({title,onAddUser,width}) => {
+  return ( 
+    <>
+      <TouchableOpacity
+        style={{
+          width: `${width}%`,
+          height: 50,
+          borderRadius: 20,
+          backgroundColor: '#000',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }} 
+        onPress={onAddUser}
+        >
+        <Text style={{color: '#fff'}}>{title}</Text>
       </TouchableOpacity>
-    </View>
+    </>
   );
 };
 
@@ -102,7 +127,7 @@ export const styles2 = StyleSheet.create({
   },
   viewAll: {
     width: '95%',
-    height: '20%',
+    height: 100,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -117,7 +142,7 @@ export const styles2 = StyleSheet.create({
     marginHorizontal: 10,
   },
   viewImage: {
-    width: '22%',
+    width: '20%',
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -129,7 +154,7 @@ export const styles2 = StyleSheet.create({
     alignItems: 'center',
   },
   view2: {
-    width: '60%',
+    width: '55%',
     height: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -148,12 +173,12 @@ export const styles2 = StyleSheet.create({
     textShadowColor: '#fafa',
   },
   buttonContainer:{
-    width:'100%',
-    height:'20%',
-   display:'flex',
-   flexDirection:"row",
-   justifyContent:'flex-end',
-   alignItems:'center',
+  width: '90%',
+  height: 50,
+  borderRadius: 20,
+  backgroundColor: '#000',
+  justifyContent: 'center',
+  alignItems: 'center',
   },
   buttonContainer1:{
     width:'100%',
@@ -165,7 +190,7 @@ export const styles2 = StyleSheet.create({
    paddingVertical:1
   },
   button:{
-    width:'30%',
+    width:'90%',
     height:'100%',
     shadowColor:'#000',
     shadowOpacity:50,
@@ -175,7 +200,8 @@ export const styles2 = StyleSheet.create({
     justifyContent:'center',
     marginRight:10,
     borderRadius:10,
-    alignItems:'flex-end',
+    // alignItems:'flex-end',
+    alignItems:'center',
     paddingVertical:10,
     paddingHorizontal:5,
     color:'white'
