@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,8 +6,12 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import CheckBox from 'react-native-check-box';
+import { User } from '../Models/userType';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { getSelectedUsers } from '../redux/slices/userSlices';
 export const SearchInput = () => {
   return (
     <View style={styles.container}>
@@ -30,9 +34,25 @@ export const SearchInput = () => {
     </View>
   );
 };
+type UserProp = {
+  id:number,
+  photoUrl:string,
+  name:string,
+  email:string,
+  Selected: boolean,
+  }
 
-export const UserCmponent = () => {
-  const [state, setState] = useState(false);
+export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Selected }) => {
+  const [isSelected, setIsSelected] = useState(Selected)
+  const users = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
+
+  const handleIsSelected = () => { 
+    const selectedUser = {id, photoUrl, name, email, Selected}
+    dispatch(getSelectedUsers(selectedUser))
+    setIsSelected(!isSelected)
+  };
+
   return (
     <View style={styles2.viewAll}>
       <View
@@ -41,24 +61,20 @@ export const UserCmponent = () => {
           height: '100%',
           justifyContent: 'center',
           alignItems: 'flex-end',
-        }}>
+        }}
+      >
         <CheckBox
-          style={{flex: 1, marginTop: 15, marginRight: 10}}
-          onClick={() => {
-            setState(!state);
-          }}
-          isChecked={state}
+          style={{ flex: 1, marginTop: 15, marginRight: 10 }}
+          onClick={handleIsSelected}
+          isChecked={isSelected}
         />
       </View>
       <View style={styles2.viewImage}>
-        <Image
-          source={require('../resources/img.jpg')}
-          style={{width: '90%', height: '60%'}}
-        />
+        <Image source={{ uri: photoUrl }} style={{ width: '90%', height: '60%' }} />
       </View>
       <View style={styles2.view2}>
-        <Text style={styles2.text}>Formasit chijoh</Text>
-        <Text>formasitf@gmail.com</Text>
+        <Text style={styles2.text}>{name}</Text>
+        <Text>{email}</Text>
       </View>
     </View>
   );
@@ -66,12 +82,13 @@ export const UserCmponent = () => {
 
 type ButtonProps = {
   title: string;
+  onAddUser:() =>void
 };
 
-export const CustomButton: React.FC<ButtonProps> = ({title}) => {
+export const CustomButton: React.FC<ButtonProps> = ({title,onAddUser}) => {
   return (
-    <View style={[styles2.buttonContainer]}>
-      <TouchableOpacity style={[styles2.button]}>
+    <View style={[!(title == 'Submit')? styles2.buttonContainer: styles2.buttonContainer1]}>
+      <TouchableOpacity style={[styles2.button]} onPress={onAddUser}>
         <Text style={[styles2.buttonText]}>{title}</Text>
       </TouchableOpacity>
     </View>
@@ -81,7 +98,7 @@ export const CustomButton: React.FC<ButtonProps> = ({title}) => {
 export const styles2 = StyleSheet.create({
   container: {
     width: '100%',
-    height: '20%',
+    height: 'auto',
   },
   viewAll: {
     width: '95%',
@@ -92,7 +109,6 @@ export const styles2 = StyleSheet.create({
     alignItems: 'center',
     padding: 2,
     borderWidth: 0.1,
-    marginBottom: 10,
     shadowRadius: 5,
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -133,15 +149,24 @@ export const styles2 = StyleSheet.create({
   },
   buttonContainer:{
     width:'100%',
-    height:'10%',
+    height:'20%',
    display:'flex',
    flexDirection:"row",
    justifyContent:'flex-end',
    alignItems:'center',
   },
+  buttonContainer1:{
+    width:'100%',
+    height:'100%',
+   display:'flex',
+   flexDirection:"row",
+   justifyContent:'flex-end',
+   alignItems:'center',
+   paddingVertical:1
+  },
   button:{
     width:'30%',
-    height:'60%',
+    height:'100%',
     shadowColor:'#000',
     shadowOpacity:50,
     elevation:10,
@@ -152,13 +177,14 @@ export const styles2 = StyleSheet.create({
     borderRadius:10,
     alignItems:'flex-end',
     paddingVertical:10,
-    paddingHorizontal:5
+    paddingHorizontal:5,
+    color:'white'
     
 
   },
   buttonText:{
     fontFamily:'sans serif',
-    fontSize:13,
+    fontSize:15,
     fontStyle:'normal',
     fontWeight:'bold',
   alignSelf:"center",
@@ -173,7 +199,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom:10,
-    marginTop:'20%'
+    marginTop:5
   },
   text: {
     width: '90%',

@@ -23,7 +23,7 @@ export const ImageUpload = () => {
   const [testSate, settestSate] = useState('');
   const [textAvatars, settextAvatars] = useState<any[]>([]);
 
-  const users = useAppSelector(state =>state.user)
+  const user = useAppSelector(state =>state.user)
   const dispatch = useAppDispatch()
   
   const TestFnction = () => {
@@ -88,9 +88,12 @@ export const ImageUpload = () => {
     storageRef
       .listAll()
       .then(function (result) {
-        result.items.forEach(function (imageRef) {
-          displayImage(imageRef);
-        });
+        if(result.items.length > 0){
+          return displayImage(result.items[3])
+        }else{
+          console.log('Image not found');
+          
+        }
       })
       .catch(function (error) {});
 
@@ -183,6 +186,8 @@ export const ImageUpload = () => {
                 </View>
               ))
             : null}
+
+            { user !== null && <Text>hojo</Text>}
       </ScrollView>
     </View>
   );
