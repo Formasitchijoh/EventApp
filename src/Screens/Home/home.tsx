@@ -13,12 +13,35 @@ import {RootStackParamList} from '../../Types/Types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import CreateEvent from '../../component/createEvent';
 import {DarkTheme, RouteProp} from '@react-navigation/native';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { useEffect, useState } from 'react';
 
 type HomeProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Home'>;
 };
 
-export const Home: React.FC<HomeProps> = ({navigation}) => {
+export const Home: React.FC<HomeProps> = ({navigation}) => { 
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
+  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  };
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <View>
+        <Text>Login</Text>
+      </View>
+    );
+  }
   return (
     <>
     <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

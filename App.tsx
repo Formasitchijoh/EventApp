@@ -21,7 +21,10 @@ import { ImageUpload } from './src/component/ImageUpload';
 import { AddParticipants } from './src/Screens/AddParticipants';
 import { events } from './src/Screens/Event/Events';
 import {EventComponent} from './src/Screens/Event/EventComponent';
-// import { ImageUpload } from './src/component/ImageUpload';
+import Feather from 'react-native-vector-icons/Feather'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import MaterialIconsfrom  from 'react-native-vector-icons/MaterialIcons'
+
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
@@ -53,10 +56,62 @@ const Tabs = () =>{
    },
   }}
   initialRouteName="FirstScreen">
-    <Tab.Screen name='FirstScreen' options={{headerShown:false}} component={AllScreens}  />
-    <Tab.Screen name='SecondScreen' options={{headerShown:false}} component={AddEvent}/>
-    <Tab.Screen name='ThirdScreen'  options={{headerShown:false}} component={Participants}/>
-    <Tab.Screen name='Events'  options={{headerShown:false}} component={EventComponent}/>
+    <Tab.Screen name='FirstScreen'
+    options={{
+      tabBarIcon:({focused}) =>(
+        <View>
+          <Feather
+          name='home'
+          size={25}
+          color={focused? '#8ac3ee' : '#d9d9d9'}
+          />
+        </View>
+      ),
+      headerShown:false
+    }}
+     component={AllScreens}  />
+    <Tab.Screen name='AddEvent'
+     options={{
+      tabBarIcon:({focused}) =>(
+        <View>
+          <MaterialIconsfrom
+          name='assignment-add'
+          size={25}
+          color={focused? '#8ac3ee' : '#d9d9d9'}
+          />
+        </View>
+      ),
+      headerShown:false
+    }} 
+     component={AddEvent}/>
+    <Tab.Screen name='Participants' 
+     options={{
+      tabBarIcon:({focused}) =>(
+        <View>
+          <MaterialIconsfrom
+          name='person-add'
+          size={25}
+          color={focused? '#8ac3ee' : '#d9d9d9'}
+          />
+        </View>
+      ),
+      headerShown:false
+    }}
+      component={Participants}/>
+    <Tab.Screen name='Events'  
+    options={{
+      tabBarIcon:({focused}) =>(
+        <View>
+          <MaterialIconsfrom
+          name='event-available'
+          size={25}
+          color={focused? '#8ac3ee' : '#d9d9d9'}
+          />
+        </View>
+      ),
+      headerShown:false
+    }}
+    component={EventComponent}/>
     </Tab.Navigator>
   )
 
@@ -78,9 +133,9 @@ function App(): JSX.Element {
      headerShown:false
     
     }}
-    initialRouteName="Login">
-     <Stack.Screen name='Login' options={{headerShown:false}} component={Login}/>
-        <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/>
+    initialRouteName="TabScreens">
+     {/* <Stack.Screen name='Login' options={{headerShown:false}} component={Login}/>
+        <Stack.Screen name='SignUp' options={{headerShown:false}} component={SignUp}/> */}
           <Stack.Screen name='TabScreens' options={{headerShown:false}} component={Tabs}/>
       </Stack.Navigator>
     </NavigationContainer>

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ScrollView,
 } from 'react-native';
 import {RootStackParamList} from '../../Types/Types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -18,6 +19,7 @@ import DatePicker from 'react-native-date-picker';
 import firestore from '@react-native-firebase/firestore'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { addEvent, getAllEvent } from '../../redux/slices/EventSlice';
+import { CustomButton } from '../../component/SearchInput';
 
 type AddEventProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddEvent'>;
@@ -310,16 +312,21 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           placeholderTextColor="#666"
           style={[stylesn.text]}></TextInput>
       </View> 
-     
       <TouchableOpacity
-        style={[styles.button]}
-        onPress={onSubmit}>
+        style={[styles.button1]}
+        onPress={() => navigation.navigate('Participants')}
+      >
+        <Text style={[styles.textbtn]}>Add Participants</Text>
+
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button1]}
+        onPress={()=> navigation.navigate('Participants')}>
         <Text style={[styles.textbtn]}>submit</Text>
       </TouchableOpacity>
-         
+      </View>
 
-      {date && <Text>{JSON.stringify(date)}</Text>}
-    </View>
+   
   );
 };
 
@@ -397,8 +404,19 @@ export const styles = StyleSheet.create({
     backgroundColor: '#230D34',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
-    marginLeft: '60%',
+    marginTop: 20,
+    marginLeft: '10%',
   },
+  button1: {
+    width: '90%',
+    height: '8%',
+    borderRadius: 10,
+    backgroundColor: '#230D34',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    // marginLeft: '60%',
+  },
+
 });
 export default AddEvent;

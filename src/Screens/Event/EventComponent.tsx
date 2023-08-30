@@ -147,9 +147,11 @@ console.log(firebaseEvents);
       </View>
       <ScrollView >
         <View style={{ height:'100%'}}>
+        <ScrollView style={events.scrollView}>
             {
                displayEvents
             }
+            </ScrollView>
         </View>
       </ScrollView>
     </View>

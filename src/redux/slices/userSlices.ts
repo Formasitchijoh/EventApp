@@ -4,12 +4,16 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { Alert } from 'react-native';
 export interface UsertState {
   users: User[],
-  participants:User[]
+  participants:User[],
+  updateId?:string,
+  editUser:any
 }
 
 const initialState:UsertState = {
   users:[],
-  participants:[]
+  participants:[],
+  updateId:'',
+  editUser:{}
 };
 
 export const userSlice = createSlice({
@@ -18,7 +22,7 @@ export const userSlice = createSlice({
   reducers: {
     setUserData(state, action: PayloadAction<User[]>) {
       const newUser = action.payload;
-      state.users = state.users.concat(newUser);
+      state.users = newUser
       console.log(JSON.stringify(action.payload));
       
     },
@@ -33,11 +37,23 @@ export const userSlice = createSlice({
       }else{
         Alert.alert('No user found')
       }
+    },
+    deleteUser(state, action){
+        state.updateId = action.payload
+    },
+    editUser(state,action){
+      const selected = state.users.find((user) => user.id === action.payload)
+      if(selected){
+        state.editUser = selected
+      }else{
+        console.log('user not found in the store');
+      }
+          
     }
     
   },
 });
 
-export const {setUserData, getSelectedUsers} = userSlice.actions;
+export const {setUserData, getSelectedUsers,deleteUser, editUser} = userSlice.actions;
 
 export default userSlice.reducer;
