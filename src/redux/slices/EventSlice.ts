@@ -1,6 +1,7 @@
 import { createSlice,  } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { Event } from "../../Models/userType";
+import { Alert } from "react-native";
 
 interface EventTypes {
     events:Array<Event>
@@ -16,14 +17,15 @@ const EventSlice = createSlice({
     initialState,
     reducers:{
        addEvent:(state, action:PayloadAction<Event>) =>{
-        [...state.events,action.payload]
+        state.events.push(action.payload)
     },
-    getAllEvent:(state, action:PayloadAction<Event>) =>{
-            state.events.push(action.payload)
-    }
+    getAllEvent:(state, action:PayloadAction<Event[]>) =>{
+            const fetchedEvents = action.payload
+            state.events = state.events.concat(fetchedEvents)
+    },
 
     }
 })
 
-const { addEvent } = EventSlice.actions
+export const { addEvent, getAllEvent } = EventSlice.actions
 export default EventSlice.reducer

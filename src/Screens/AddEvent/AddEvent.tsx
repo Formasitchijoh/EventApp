@@ -16,7 +16,8 @@ import {Event} from '../../Models/userType';
 import {v4 as uuid} from 'uuid';
 import DatePicker from 'react-native-date-picker';
 import firestore from '@react-native-firebase/firestore'
-
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { addEvent, getAllEvent } from '../../redux/slices/EventSlice';
 
 type AddEventProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddEvent'>;
@@ -24,7 +25,9 @@ type AddEventProps = {
 
 export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
  
-
+ const events = useAppSelector(state =>state.event)
+ const dispatch = useAppDispatch()
+ const users = useAppSelector(state => state.user)
 
   const [state, setState] = useState<Event>({
     id: Math.ceil(Math.random() * 20),
@@ -56,13 +59,16 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
   };
 
   const onSubmit = () =>{ 
-    console.log(JSON.stringify(state));
+    const newEvent = {
+      ...state, participants:users.participants
+    }
     
     firestore()
     .collection('Events')
     .add({
-      ...state
-    }).then(() =>{
+      ...newEvent
+    }).then(() =>{ 
+      dispatch(addEvent(state))
       console.log('data uploaded successfully');
       
     }).catch(err =>{

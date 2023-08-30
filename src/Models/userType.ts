@@ -1,9 +1,11 @@
 
 export interface User  {
-    
+    Selected:boolean,
     id:number,
     email:string,
-    password:string,
+    name:string,
+    photoUrl:string,
+    
 
 }
 

@@ -7,7 +7,9 @@ export type RootStackParamList = {
     Home:undefined;
     AddEvent:undefined;
     Participants:undefined;
-    TabScreens:undefined
+    TabScreens:undefined;
+    Events:undefined;
+    
   };
 
   export type LoginParamList = {
