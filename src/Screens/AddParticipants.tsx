@@ -5,6 +5,8 @@ import {CustomButton} from '../component/SearchInput';
 import firestore from '@react-native-firebase/firestore';
 import storage, {FirebaseStorageTypes} from '@react-native-firebase/storage';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { editUser } from '../redux/slices/userSlices';
+
 interface UserInfoProp {
   userInfo: {
     id:number,
@@ -23,18 +25,26 @@ interface UserInfoProp {
     }>
   >;
   hideModal: () => void,
-  
+  visible: boolean
 }
 
 export const AddParticipants: React.FC<UserInfoProp> = ({
   setUserInfo,
   userInfo,
   hideModal,
+  visible
 }) => {
+
+  const user = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
 
   const [avatar, setavatar] = useState('');
   const [allAvatars, setAllAvatars] = useState<any[]>([]);
+  const [email, setEmail] = useState(user.editUser.email)
+  const [name, setName] = useState(user.editUser.name)
+
   const containerStyle = {backgroundColor: 'white', padding: 20, height: 200};
+
   const onChangeUserInfo = (value: string, name: string) => {
     setUserInfo(prev => ({
       ...prev,
@@ -49,6 +59,7 @@ export const AddParticipants: React.FC<UserInfoProp> = ({
       });
     }
   };
+
 
   useEffect(() => {
     const Avatar = Math.ceil(Math.random() * 10);
@@ -78,7 +89,7 @@ export const AddParticipants: React.FC<UserInfoProp> = ({
       photoUrl: avatar,
       Selected:false
     };
-
+Alert.alert('am in')
     firestore()
       .collection('Users')
       .add(newUser)
@@ -93,8 +104,25 @@ export const AddParticipants: React.FC<UserInfoProp> = ({
       });
   };
 
+  const onEditUser = () =>{
+
+    const id = user.updateId as unknown as string
+    const updatedUser = { id, email, name }
+    firestore()
+  .collection('Users')
+  .doc(id)
+  .update(updatedUser)
+  .then(() => {
+    Alert.alert('User updated!');
+    hideModal()
+  });
+
+  }
   return (
-    <View style={[stylesn.container]}>
+    <>
+    {
+      user.editUser.name == '' ? (
+        <View style={[stylesn.container]}>
       <Text
         style={{
           fontFamily: 'Inter',
@@ -103,8 +131,7 @@ export const AddParticipants: React.FC<UserInfoProp> = ({
           fontWeight: 'bold',
           marginVertical: 5,
         }}>
-        {' '}
-        Add a Participant
+        Add Participant 
       </Text>
       <TextInput
         placeholder="Name"
@@ -118,8 +145,39 @@ export const AddParticipants: React.FC<UserInfoProp> = ({
         value={userInfo.email}
         onChangeText={value => onChangeUserInfo(value, 'email')}
         style={[stylesn.text]}></TextInput>
-      <CustomButton width={40} title="Add" onAddUser={onAddUser} />
+      <CustomButton width={40} title="Add" onAddUser={onAddUser
+      } />
     </View>
+      ):(
+        <View style={[stylesn.container]}>
+        <Text
+          style={{
+            fontFamily: 'Inter',
+            fontSize: 20,
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            marginVertical: 5,
+          }}>
+     Edit   Participant
+        </Text>
+        <TextInput
+          placeholder="Name"
+          placeholderTextColor="#666"
+          value={name}
+          onChangeText={value => setName(value)}
+          style={[stylesn.text]}></TextInput>
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#666"
+          value={email}
+          onChangeText={value => setEmail(value)}
+          style={[stylesn.text]}></TextInput>
+        <CustomButton width={40} title="Add" onAddUser={onEditUser} />
+      </View>
+      )
+    }
+    
+    </>
   );
 };
 

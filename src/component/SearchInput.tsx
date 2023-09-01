@@ -46,6 +46,53 @@ type UserProp = {
   
 }
 
+export const MemberComponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Selected,onClickUpdate }) => {
+  const [isSelected, setIsSelected] = useState(Selected)
+ 
+  const users = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
+
+ const ids = id as unknown as string
+
+  const handleIsSelected = () => { 
+    const selectedUser = {id, photoUrl, name, email, Selected}
+    dispatch(getSelectedUsers(selectedUser))
+    setIsSelected(!isSelected)
+  };
+
+  return (
+    <View style={styles2.viewAll}>
+      <View
+        style={{
+          width: '15%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+        }}
+      >
+        {/* <CheckBox
+          style={{ flex: 1, marginTop: 15, marginRight: 10 }}
+          onClick={handleIsSelected}
+          isChecked={isSelected}
+        /> */}
+      </View>
+      <View style={styles2.viewImage}>
+        <Image source={{ uri: photoUrl }} style={{ width: '90%', height: '60%' }} />
+      </View>
+      <View style={styles2.view2}>
+        <Text style={styles2.text}>{name}</Text>
+        <Text>{email}</Text>
+      </View>
+      <TouchableOpacity style={{width:'5%', justifyContent:'flex-start',alignItems:'flex-start',height:'90%'}} onPress={() =>onClickUpdate(ids)}>
+        <Entypo
+        name='dots-three-vertical'
+        size={25}
+        color={'#000'}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
 export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Selected,onClickUpdate }) => {
   const [isSelected, setIsSelected] = useState(Selected)
  
@@ -83,13 +130,13 @@ export const UserCmponent: React.FC<UserProp> = ({ id, photoUrl, name, email, Se
         <Text style={styles2.text}>{name}</Text>
         <Text>{email}</Text>
       </View>
-      <TouchableOpacity style={{width:'5%', justifyContent:'flex-start',alignItems:'flex-start',height:'90%'}} onPress={() =>onClickUpdate(ids)}>
+      {/* <TouchableOpacity style={{width:'5%', justifyContent:'flex-start',alignItems:'flex-start',height:'90%'}} onPress={() =>onClickUpdate(ids)}>
         <Entypo
         name='dots-three-vertical'
         size={25}
         color={'#000'}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -225,7 +272,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom:10,
-    marginTop:5
+    marginTop:20
   },
   text: {
     width: '90%',
