@@ -186,7 +186,7 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
           <>
             <TextInput
               placeholder="Enter email"
-              value={userDetails.email}
+              value={values.email}
               onChangeText={value => onInputChange(value, 'email')}
               onBlur={handleBlur('email')}
               keyboardType="email-address"
@@ -196,7 +196,7 @@ export const SignUp: React.FC<SignInProps> = ({navigation}) => {
               <Text style={{fontSize: 10, color: 'red'}}>{errors.email}</Text>
             )}
             <TextInput
-              value={userDetails.password}
+              value={values.password}
               onChangeText={value => onInputChange(value, 'password')}
               onBlur={handleBlur('password')}
               placeholder="Enter password"

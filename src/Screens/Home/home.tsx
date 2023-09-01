@@ -15,7 +15,7 @@ import CreateEvent from '../../component/createEvent';
 import {DarkTheme, RouteProp} from '@react-navigation/native';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useEffect, useState } from 'react';
-
+import { SignUp } from '../SignUp/SignUp';
 type HomeProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Home'>;
 };
@@ -28,20 +28,18 @@ export const Home: React.FC<HomeProps> = ({navigation}) => {
     if (initializing) setInitializing(false);
   };
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+  // useEffect(() => {
+  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber;
+  // }, []);
 
-  if (initializing) return null;
+  // if (initializing) return null;
 
-  if (!user) {
-    return (
-      <View>
-        <Text>Login</Text>
-      </View>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //    <SignUp/>
+  //   );
+  // }
   return (
     <>
     <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

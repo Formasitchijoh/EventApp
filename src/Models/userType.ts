@@ -16,13 +16,13 @@ export interface Admin {
 }
 
 export interface Event {
-    id:number,
+    id:string,
     title:string,
     desc:string,
-    start_date:Date,
-    end_date:Date,
-    start_time:Date,
-    end_time:Date,
+    start_date:string,
+    end_date:string,
+    start_time:string ,
+    end_time:string ,
     participants?:User[]
     
 }

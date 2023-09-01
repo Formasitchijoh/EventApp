@@ -25,10 +25,11 @@ import {User} from '../../Models/userType';
 import {CustomButton} from '../../component/SearchInput';
 import {SelectedParticipants} from '../../component/SelectedParticipants';
 import {ManageUser} from '../../component/ManageUser';
-
+import { RouteProp } from '@react-navigation/native';
 type participantsProps = {
   navigation: StackNavigationProp<RootStackParamList, 'Participants'>;
 };
+
 
 export const Participants: React.FC<participantsProps> = ({navigation}) => {
   const user = useAppSelector(state => state.user);
@@ -79,8 +80,6 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
           const userData = { ...data, id: user.id }; // Adding the document ID to the user data
           userArray.unshift(userData);
         }        
-
-        console.log(`ggggggggggggggggggggg ${JSON.stringify(userArray)}`);
         
         const convertedUserArray: User[] = userArray.map(
           (data: FirebaseFirestoreTypes.DocumentData) => {
@@ -141,6 +140,10 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
     }
   };
 
+  const handleSelectedParticipants = () =>{
+    console.log(JSON.stringify(user.participants))
+    navigation.navigate('AddEvent')
+  }
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -152,7 +155,7 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
             justifyContent: 'flex-end',
             marginTop: 20,
           }}>
-          <CustomButton width={40} title={'Submit'} />
+          <CustomButton width={40} title={'Submit'} onAddUser={handleSelectedParticipants} />
         </View>
         <SearchInput />
         <ScrollView style={styles.scrollView}>
@@ -170,7 +173,7 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
               ))
             : null}
         </ScrollView>
-        <View>
+        {/* <View>
           <Text>Floating Action example</Text>
           <FloatingAction
             position="right"
@@ -180,7 +183,7 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
             onPressMain={showModal}
             onOpen={showModal}
           />
-        </View>
+        </View> */}
       </View>
 
       {
@@ -188,13 +191,14 @@ export const Participants: React.FC<participantsProps> = ({navigation}) => {
           <View style={{width: '100%', height: '100%'}}>
             <Modal
               visible={visible}
-              onDismiss={hideModal}
+              onDismiss={hideModal} 
               style={{width: '100%', height: '100%'}}
               contentContainerStyle={containerStyle}>
               <AddParticipants
                 userInfo={userInfo}
                 setUserInfo={setUserInfo}
                 hideModal={hideModal}
+                visible={visible}
               />
             </Modal>
           </View>

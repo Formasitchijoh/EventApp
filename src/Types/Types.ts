@@ -6,9 +6,10 @@ export type RootStackParamList = {
     Login:undefined;
     Home:undefined;
     AddEvent:undefined;
-    Participants:undefined;
+    Participants:{ action?: string };
     TabScreens:undefined;
     Events:undefined;
+    Members:undefined,
     
   };
 

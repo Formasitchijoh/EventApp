@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {RootStackParamList} from '../../Types/Types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -16,42 +17,59 @@ import {DateInput, TitleInput} from '../../component/Form_Input';
 import {Event} from '../../Models/userType';
 import {v4 as uuid} from 'uuid';
 import DatePicker from 'react-native-date-picker';
-import firestore from '@react-native-firebase/firestore'
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { addEvent, getAllEvent } from '../../redux/slices/EventSlice';
-import { CustomButton } from '../../component/SearchInput';
+import firestore from '@react-native-firebase/firestore';
+import {useAppDispatch, useAppSelector} from '../../hooks/hooks';
+import {addEvent, getAllEvent} from '../../redux/slices/EventSlice';
+import {CustomButton} from '../../component/SearchInput';
+import moment from 'moment';
 
 type AddEventProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddEvent'>;
 };
 
 export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
- 
- const events = useAppSelector(state =>state.event)
- const dispatch = useAppDispatch()
- const users = useAppSelector(state => state.user)
+  const events = useAppSelector(state => state.event);
+  const users = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+
+  const {SelectedEvent} = events;
 
   const [state, setState] = useState<Event>({
-    id: Math.ceil(Math.random() * 20),
+    id: '',
     title: '',
     desc: '',
-    start_date: new Date(),
-    end_date:new Date(),
-    start_time: new Date(),
-    end_time: new Date(),
+    start_date: '',
+    end_date: '',
+    start_time: '',
+    end_time: '',
     participants: [],
   });
 
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false)
-  
+  const [editState, setEditState] = useState({
+    id: SelectedEvent.id ?? '',
+    title: SelectedEvent.title ?? '',
+    desc: SelectedEvent.desc ?? '',
+    start_date: SelectedEvent.start_date ?? '',
+    end_date: SelectedEvent.end_date ?? '',
+    start_time: SelectedEvent.start_time ?? '',
+    end_time: SelectedEvent.end_time ?? '',
+    participants: SelectedEvent.participants,
+  });
+
+  const [date, setDate] = useState({
+    start_date: new Date(),
+    end_date: new Date(),
+    start_time: new Date(),
+    end_time: new Date(),
+  });
+  const [open, setOpen] = useState(false);
+
   const [isOpen, setIsOpen] = useState({
-    start_date:false,
-    end_date:false,
+    start_date: false,
+    end_date: false,
     start_time: false,
     end_time: false,
   });
-
 
   const handleInputchange = (value: string, name: string) => {
     setState(prev => ({
@@ -60,29 +78,77 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
     }));
   };
 
-  const onSubmit = () =>{ 
+  const handleInputEditChange = (value: string, name: string) => {
+    setEditState(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const onSubmit = () => {
     const newEvent = {
-      ...state, participants:users.participants
-    }
-    
+      ...state,
+      participants: users.participants,
+    };
+    setState(
+      {
+        id: '',
+        title: '',
+        desc: '',
+        start_date: '',
+        end_date: '',
+        start_time: '',
+        end_time: '',
+        participants: [],
+      }
+    )
+
     firestore()
-    .collection('Events')
-    .add({
-      ...newEvent
-    }).then(() =>{ 
-      dispatch(addEvent(state))
-      console.log('data uploaded successfully');
-      
-    }).catch(err =>{
-      console.log(err);
-      
+      .collection('Events')
+      .add({
+        ...newEvent,
+      })
+      .then(() => {
+        dispatch(addEvent(state));
+        Alert.alert('data uploaded successfully');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const onEditEvent = () => {
+    const id = events.SelectedEvent.id as unknown as string;
+    const updatedParticipants = editState.participants?.concat(
+      users.participants,
+    );
+    const updatedEvent = {...editState, participant: updatedParticipants};
+    setEditState({
+      id: '',
+      title: '',
+      desc: '',
+      start_date: '',
+      end_date: '',
+      start_time: '',
+      end_time: '',
+      participants: [],
     })
+    firestore()
+      .collection('Events')
+      .doc(id)
+      .update(updatedEvent)
+      .then(() => {
+        Alert.alert('Event updated');
+        navigation.navigate('Events');
+      });
+  };
 
-  }
 
- 
   return (
-    <View style={[styles.container]}>
+   <>
+   
+   {
+    events.SelectedEvent.title == '' ? ( 
+      <View style={[styles.container]}>
       <Text style={[styles.text]}>Schedule a Task </Text>
       {/* <View style={[styles.container]}> */}
       <TextInput
@@ -106,7 +172,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="start date"
             placeholderTextColor="#666"
-            value={state.start_date.toISOString().toString().slice(0,10).replaceAll('-','/')}
+            value={state.start_date}
             style={{width: '90%'}}></TextInput>
           <View
             style={{
@@ -118,7 +184,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => setIsOpen({...isOpen, start_date:true})}
+              onPress={() => setIsOpen({...isOpen, start_date: true})}
               style={{
                 height: '50%',
                 width: '100%',
@@ -142,14 +208,17 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
         androidVariant="nativeAndroid"
         mode="date"
         open={isOpen.start_date}
-        date={date}
+        date={date.start_date}
         onConfirm={date => {
-          setIsOpen({...isOpen, start_date:false});
-          setState({...state, start_date:date})
-          setDate(date);
+          setIsOpen({...isOpen, start_date: false});
+          setState({...state, start_date: moment(date).format('L')});
+          setDate(prev => ({
+            ...prev,
+            start_date: date,
+          }));
         }}
         onCancel={() => {
-          setIsOpen({...isOpen, start_date:false});
+          setIsOpen({...isOpen, start_date: false});
         }}
       />
       <View style={[stylesn.container]}>
@@ -157,7 +226,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           <TextInput
             placeholder="end date"
             placeholderTextColor="#666"
-            value={state.end_date.toISOString().toString().slice(0,10).replaceAll('-','/')}
+            value={state.end_date}
             style={{width: '90%'}}></TextInput>
           <View
             style={{
@@ -169,7 +238,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => setIsOpen({...isOpen, end_date:true})}
+              onPress={() => setIsOpen({...isOpen, end_date: true})}
               style={{
                 height: '50%',
                 width: '100%',
@@ -193,23 +262,26 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
         androidVariant="nativeAndroid"
         mode="date"
         open={isOpen.end_date}
-        date={state.end_date}
+        date={date.end_date}
         onConfirm={date => {
-          setIsOpen({...isOpen, end_date:false});
-          setState({...state, end_date:date})
-          // setDate(date);
+          setIsOpen({...isOpen, end_date: false});
+          setState({...state, end_date: moment(date).format('L')});
+          setDate(prev => ({
+            ...prev,
+            end_date: date,
+          }));
         }}
         onCancel={() => {
-          setIsOpen({...isOpen, end_date:false});
+          setIsOpen({...isOpen, end_date: false});
         }}
       />
 
       <View style={[stylesn.dateView]}>
         <View style={[stylesn.text, stylesn.date, stylesn.imageView]}>
           <TextInput
-            placeholder="start date"
+            placeholder="start time"
             placeholderTextColor="#666"
-            value={state.start_time.toISOString().toString().slice(11,19)}
+            value={state.start_time}
             style={{width: '85%'}}></TextInput>
           <View
             style={{
@@ -221,7 +293,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => setIsOpen({...isOpen, start_time:true})}
+              onPress={() => setIsOpen({...isOpen, start_time: true})}
               style={{
                 height: '50%',
                 width: '100%',
@@ -240,26 +312,29 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           </View>
         </View>
         <DatePicker
-        modal
-        androidVariant="nativeAndroid"
-        mode="time"
-        open={isOpen.start_time}
-        date={state.start_time}
-        onConfirm={date => {
-          setIsOpen({...isOpen, start_time:false});
-          setState({...state, start_time:date})
-          // setDate(date);
-        }}
-        onCancel={() => {
-          setIsOpen({...isOpen, start_time:false});
-        }}
-      />
+          modal
+          androidVariant="nativeAndroid"
+          mode="time"
+          open={isOpen.start_time}
+          date={date.start_time}
+          onConfirm={date => {
+            setIsOpen({...isOpen, start_time: false});
+            setState({...state, start_time: moment(date).format('LT')});
+            setDate(prev => ({
+              ...prev,
+              start_time: date,
+            }));
+          }}
+          onCancel={() => {
+            setIsOpen({...isOpen, start_time: false});
+          }}
+        />
 
         <View style={[stylesn.text, stylesn.date, stylesn.imageView]}>
           <TextInput
-            placeholder="start date"
+            placeholder="end time"
             placeholderTextColor="#666"
-            value={state.end_time.toISOString().toString().slice(11,19)}
+            value={state.end_time}
             style={{width: '85%'}}></TextInput>
           <View
             style={{
@@ -271,7 +346,7 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => setIsOpen({...isOpen, end_time:true})}
+              onPress={() => setIsOpen({...isOpen, end_time: true})}
               style={{
                 height: '50%',
                 width: '100%',
@@ -290,43 +365,325 @@ export const AddEvent: React.FC<AddEventProps> = ({navigation}) => {
           </View>
         </View>
         <DatePicker
+          modal
+          androidVariant="nativeAndroid"
+          mode="time"
+          open={isOpen.end_time}
+          date={date.end_time}
+          onConfirm={date => {
+            setIsOpen({...isOpen, end_time: false});
+            setState({...state, end_time: moment(date).format('LT')});
+            setDate(prev => ({
+              ...prev,
+              end_time: date,
+            }));
+          }}
+          onCancel={() => {
+            setIsOpen({...isOpen, end_time: false});
+          }}
+        />
+      </View>
+      <TouchableOpacity
+        style={[styles.button2]}
+        onPress={() => navigation.navigate('Participants',{action:''})}>
+        {users.participants ? (
+          users.participants.map((avatar: any, index: number) => (
+            <View
+              key={index}
+              style={{
+                position: 'absolute',
+                left: index * 30,
+                top: '10%',
+                zIndex: 5,
+                marginBottom: 20,
+              }}>
+              <Image
+                source={{uri: avatar.photoUrl}}
+                style={styles.image_returned}
+              />
+            </View>
+          ))
+        ) : (
+          <Text>Add Participants</Text>
+        )}
+        <Text style={{fontSize: 30, fontWeight: 'bold'}}>+</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button1]} onPress={onSubmit}>
+        <Text style={[styles.textbtn]}>submit</Text>
+      </TouchableOpacity>
+    </View>
+
+    ):(
+      <View style={[styles.container]}>
+      <Text style={[styles.text]}>Edit task { editState.title} </Text>
+      {/* <View style={[styles.container]}> */}
+      <TextInput
+        placeholder="Title"
+        onChangeText={value => handleInputEditChange(value, 'title')}
+        placeholderTextColor="#666"
+        value={editState.title}
+        style={[stylesn.text]}></TextInput>
+      {/* </View> */}
+
+      <View style={[stylesn.container]}>
+        <TextInput
+          placeholder="Description"
+          placeholderTextColor="#666"
+          value={editState.desc}
+          onChangeText={value => handleInputEditChange(value, 'desc')}
+          style={[stylesn.text, stylesn.textarea]}
+          multiline={true}></TextInput>
+      </View>
+
+      <View style={[stylesn.container]}>
+        <View style={[stylesn.text, stylesn.imageView]}>
+          <TextInput
+            placeholder="start date"
+            placeholderTextColor="#666"
+            value={editState.start_date}
+            style={{width: '90%'}}></TextInput>
+          <View
+            style={{
+              width: '7%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => setIsOpen({...isOpen, start_date: true})}
+              style={{
+                height: '50%',
+                width: '100%',
+                shadowColor: '#000',
+              }}>
+              <Image
+                source={require('../../resources/calendar-month.png')}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  tintColor: '#000',
+                  shadowColor: '#000',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <DatePicker
         modal
         androidVariant="nativeAndroid"
-        mode="time"
-        open={isOpen.end_time}
-        date={state.end_time}
+        mode="date"
+        open={isOpen.start_date}
+        date={date.start_date}
         onConfirm={date => {
-          setIsOpen({...isOpen, end_time:false});
-          setState({...state, end_time:date})
-          // setDate(date);
+          setIsOpen({...isOpen, start_date: false});
+          setEditState({...editState, start_date: moment(date).format('L')});
+          setDate(prev => ({
+            ...prev,
+            start_date: date,
+          }));
         }}
         onCancel={() => {
-          setIsOpen({...isOpen, end_time:false});
+          setIsOpen({...isOpen, start_date: false});
+        }}
+      />
+      <View style={[stylesn.container]}>
+        <View style={[stylesn.text, stylesn.imageView]}>
+          <TextInput
+            placeholder="end date"
+            placeholderTextColor="#666"
+            value={editState.end_date}
+            style={{width: '90%'}}></TextInput>
+          <View
+            style={{
+              width: '7%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => setIsOpen({...isOpen, end_date: true})}
+              style={{
+                height: '50%',
+                width: '100%',
+                shadowColor: '#000',
+              }}>
+              <Image
+                source={require('../../resources/calendar-month.png')}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  tintColor: '#000',
+                  shadowColor: '#000',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <DatePicker
+        modal
+        androidVariant="nativeAndroid"
+        mode="date"
+        open={isOpen.end_date}
+        date={date.end_date}
+        onConfirm={date => {
+          setIsOpen({...isOpen, end_date: false});
+          setEditState({...editState, end_date: moment(date).format('L')});
+          setDate(prev => ({
+            ...prev,
+            end_date: date,
+          }));
+        }}
+        onCancel={() => {
+          setIsOpen({...isOpen, end_date: false});
         }}
       />
 
-      </View>
-      <View style={[stylesn.container]}>
-        <TextInput
-          placeholder="Add participants"
-          placeholderTextColor="#666"
-          style={[stylesn.text]}></TextInput>
-      </View> 
-      <TouchableOpacity
-        style={[styles.button1]}
-        onPress={() => navigation.navigate('Participants')}
-      >
-        <Text style={[styles.textbtn]}>Add Participants</Text>
+      <View style={[stylesn.dateView]}>
+        <View style={[stylesn.text, stylesn.date, stylesn.imageView]}>
+          <TextInput
+            placeholder="start time"
+            placeholderTextColor="#666"
+            value={editState.start_time}
+            style={{width: '85%'}}></TextInput>
+          <View
+            style={{
+              width: '12%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => setIsOpen({...isOpen, start_time: true})}
+              style={{
+                height: '50%',
+                width: '100%',
+                shadowColor: '#000',
+              }}>
+              <Image
+                source={require('../../resources/timer.png')}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  tintColor: '#000',
+                  shadowColor: '#000',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <DatePicker
+          modal
+          androidVariant="nativeAndroid"
+          mode="time"
+          open={isOpen.start_time}
+          date={date.start_time}
+          onConfirm={date => {
+            setIsOpen({...isOpen, start_time: false});
+            setEditState({...editState, start_time: moment(date).format('LT')});
+            setDate(prev => ({
+              ...prev,
+              start_time: date,
+            }));
+          }}
+          onCancel={() => {
+            setIsOpen({...isOpen, start_time: false});
+          }}
+        />
 
-      </TouchableOpacity>
+        <View style={[stylesn.text, stylesn.date, stylesn.imageView]}>
+          <TextInput
+            placeholder="end time"
+            placeholderTextColor="#666"
+            value={editState.end_time}
+            style={{width: '85%'}}></TextInput>
+          <View
+            style={{
+              width: '12%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => setIsOpen({...isOpen, end_time: true})}
+              style={{
+                height: '50%',
+                width: '100%',
+                shadowColor: '#000',
+              }}>
+              <Image
+                source={require('../../resources/timer.png')}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  tintColor: '#000',
+                  shadowColor: '#000',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <DatePicker
+          modal
+          androidVariant="nativeAndroid"
+          mode="time"
+          open={isOpen.end_time}
+          date={date.end_time}
+          onConfirm={date => {
+            setIsOpen({...isOpen, end_time: false});
+            setEditState({...editState, end_time: moment(date).format('LT')});
+            setDate(prev => ({
+              ...prev,
+              end_time: date,
+            }));
+          }}
+          onCancel={() => {
+            setIsOpen({...isOpen, end_time: false});
+          }}
+        />
+      </View>
       <TouchableOpacity
-        style={[styles.button1]}
-        onPress={()=> navigation.navigate('Participants')}>
+        style={[styles.button2]}
+        onPress={() => navigation.navigate('Participants', {action:''})}>
+        {editState.participants ? (
+          editState.participants.map((avatar: any, index: number) => (
+            <View
+              key={index}
+              style={{
+                position: 'absolute',
+                left: index * 30,
+                top: '10%',
+                zIndex: 5,
+                marginBottom: 20,
+              }}>
+              <Image
+                source={{uri: avatar.photoUrl}}
+                style={styles.image_returned}
+              />
+            </View>
+          ))
+        ) : (
+          <Text>Add Participants</Text>
+        )}
+        <Text style={{fontSize: 30, fontWeight: 'bold'}}>+</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button1]} onPress={onEditEvent}>
         <Text style={[styles.textbtn]}>submit</Text>
       </TouchableOpacity>
-      </View>
+    </View>
 
-   
+    )
+   }
+   </>
   );
 };
 
@@ -336,7 +693,6 @@ export const stylesn = StyleSheet.create({
     height: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor:'blue',
   },
   text: {
     width: '90%',
@@ -344,7 +700,6 @@ export const stylesn = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     margin: 10,
-    // backgroundColor: '#fbfa',
   },
   textarea: {
     height: 80,
@@ -376,6 +731,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 0.5,
   },
+  image_returned: {
+    width: 50,
+    height: 50,
+    borderRadius: 90,
+  },
   text: {
     color: '#000',
     textShadowColor: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -397,6 +757,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     color: 'white',
   },
+  textbtn1: {
+    textShadowColor: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    fontFamily: 'Inter',
+    fontSize: 20,
+    fontStyle: 'normal',
+    fontWeight: '900',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#000',
+  },
   button: {
     width: '30%',
     height: '8%',
@@ -415,8 +785,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
+  },
+  button2: {
+    width: '90%',
+    height: '8%',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    color: '#000',
+    paddingLeft: 30,
     // marginLeft: '60%',
   },
-
 });
 export default AddEvent;

@@ -24,7 +24,7 @@ import {EventComponent} from './src/Screens/Event/EventComponent';
 import Feather from 'react-native-vector-icons/Feather'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import MaterialIconsfrom  from 'react-native-vector-icons/MaterialIcons'
-
+import { Members } from './src/Screens/Members/Members';
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
@@ -35,7 +35,6 @@ const AllScreens = () =>{
         <Stack.Screen name='Home' options={{headerShown:false}} component={Home}/>
         <Stack.Screen name='AddEvent' options={{headerShown:false}} component={AddEvent}/>
         <Stack.Screen name='Participants' options={{headerShown:false}} component={Participants}/>
-        <Stack.Screen name='Events' options={{headerShown:false}} component={EventComponent}/>
 
       </Stack.Navigator>
 
@@ -84,7 +83,7 @@ const Tabs = () =>{
       headerShown:false
     }} 
      component={AddEvent}/>
-    <Tab.Screen name='Participants' 
+    <Tab.Screen name='Members' 
      options={{
       tabBarIcon:({focused}) =>(
         <View>
@@ -97,7 +96,7 @@ const Tabs = () =>{
       ),
       headerShown:false
     }}
-      component={Participants}/>
+      component={Members}/>
     <Tab.Screen name='Events'  
     options={{
       tabBarIcon:({focused}) =>(
